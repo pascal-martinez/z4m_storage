@@ -18,8 +18,8 @@
  * --------------------------------------------------------------------
  * ZnetDK 4 Mobile Storage module DAO class
  *
- * File version: 1.0
- * Last update: 12/02/2024
+ * File version: 1.1
+ * Last update: 12/22/2024
  */
 namespace z4m_storage\mod\model;
 
@@ -45,7 +45,7 @@ class DocumentDAO extends DAO_Class {
      * class.
      */
     public function __construct($trackingEnabled = FALSE, $includeDetails = FALSE) {
-        if (get_parent_class() === 'z4m_audittrail\mod\AuditTrailDAO') {
+        if (get_parent_class($this) === 'z4m_audittrail\mod\AuditTrailDAO') {
             parent::__construct($trackingEnabled, $includeDetails);
         } else {
             parent::__construct();
