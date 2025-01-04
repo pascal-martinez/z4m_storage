@@ -18,8 +18,8 @@
  * --------------------------------------------------------------------
  * ZnetDK 4 Mobile Storage module view fragment
  *
- * File version: 1.0
- * Last update: 12/03/2024
+ * File version: 1.1
+ * Last update: 12/23/2024
  */
 use \z4m_storage\mod\DocumentManager;
 $maxFilesize = DocumentManager::getMaxFileSize();
@@ -34,8 +34,6 @@ $uploadButtonLabel = isset($isPhotoUpload) && $isPhotoUpload === TRUE
         ? MOD_Z4M_STORAGE_PHOTOS_UPLOAD_BUTTON : MOD_Z4M_STORAGE_DOCUMENTS_UPLOAD_BUTTON;
 $acceptFile = isset($isPhotoUpload) && $isPhotoUpload === TRUE ? ' accept="image/*"' : '';
 $uploadButtonIcon = isset($isPhotoUpload) && $isPhotoUpload === TRUE ? 'fa-camera' : 'fa-folder-open-o';
-$removeQuestion = isset($isPhotoUpload) && $isPhotoUpload === TRUE 
-        ? MOD_Z4M_STORAGE_PHOTOS_REMOVE_QUESTION : MOD_Z4M_STORAGE_DOCUMENTS_REMOVE_QUESTION;
 ?>
     <form data-download-url="<?php echo General::getURIforDownload('Z4MStorageCtrl'); ?>"
             data-remove-title="<?php echo MOD_Z4M_STORAGE_DOCUMENTS_REMOVE_BUTTON; ?>"
