@@ -18,8 +18,8 @@
  * --------------------------------------------------------------------
  * ZnetDK 4 Mobile Storage Module Spanish translations
  *
- * File version: 1.0
- * Last update: 12/04/2024
+ * File version: 1.1
+ * Last update: 12/23/2024
  */
 define('MOD_Z4M_STORAGE_MENU_LABEL', 'Almacenamiento');
 define('MOD_Z4M_STORAGE_USED_MENU_LABEL', 'Disco utilizado');
@@ -35,8 +35,7 @@ define('MOD_Z4M_STORAGE_DOCUMENTS_UPLOAD_BUTTON', 'Subir documentos...');
 define('MOD_Z4M_STORAGE_PHOTOS_UPLOAD_BUTTON', 'Subir fotos...');
 define('MOD_Z4M_STORAGE_DOCUMENTS_REMOVE_BUTTON', 'Eliminar...');
 define('MOD_Z4M_STORAGE_DOCUMENTS_DOWNLOAD_LINK', 'Descargar...');
-define('MOD_Z4M_STORAGE_DOCUMENTS_REMOVE_QUESTION', '¿Eliminar el documento <b>%filename%</b>?');
-define('MOD_Z4M_STORAGE_PHOTOS_REMOVE_QUESTION', '¿Eliminar la foto <b>%filename%</b>?');
+define('MOD_Z4M_STORAGE_DOCUMENTS_REMOVE_QUESTION', '¿Eliminar <b>%filename%</b>?');
 define('MOD_Z4M_STORAGE_DOCUMENTS_FILENAME_LABEL', 'Archivo');
 define('MOD_Z4M_STORAGE_DOCUMENTS_UPLOAD_DATE_LABEL', 'Fecha de subida');
 define('MOD_Z4M_STORAGE_DOCUMENTS_USER_LABEL', 'Usuario');
@@ -55,12 +54,12 @@ define('MOD_Z4M_STORAGE_PURGE_BUTTON_LABEL', 'Purgar...');
 define('MOD_Z4M_STORAGE_PURGE_CONFIRMATION_TEXT', '¿Confirmas la purga de los documentos?');
 define('MOD_Z4M_STORAGE_PURGE_SUCCESS', 'Purga de los documentos exitosa.');
 
-define('MOD_Z4M_STORAGE_DOCUMENTS_ERROR_DOWNLOAD_NOT_EXISTS', 'El documento ya no existe.');
-define('MOD_Z4M_STORAGE_DOCUMENTS_SUCCESS_UPLOAD', '%count% documentos cargados.');
+define('MOD_Z4M_STORAGE_DOCUMENTS_ERROR_DOWNLOAD_NOT_EXISTS', 'El archivo ya no existe.');
+define('MOD_Z4M_STORAGE_DOCUMENTS_SUCCESS_UPLOAD', '%count% archivos cargados.');
 define('MOD_Z4M_STORAGE_DOCUMENTS_ERROR_UPLOAD_FILESIZE_EXCEEDED', 'Se excedió el tamaño máximo permitido de <b>%max_filesize%</b> para el archivo <b>%filename%</b>.');
 define('MOD_Z4M_STORAGE_DOCUMENTS_ERROR_UPLOAD_SELECTION_FILESIZE_EXCEEDED', 'Se excedió el tamaño máximo permitido de <b>%max_selectionfilesize%</b> para los <b>%file_count% archivos</b> seleccionados.');
 define('MOD_Z4M_STORAGE_DOCUMENTS_ERROR_UPLOAD_DISKSPACE_EXCEEDED', 'Se superó el espacio máximo en disco de <b>%max_diskspace%</b> para almacenar el archivo <b>%filename%</b>.');
-define('MOD_Z4M_STORAGE_DOCUMENTS_ERROR_UPLOAD_OTHER', 'La carga de los documentos ha fallado.');
-define('MOD_Z4M_STORAGE_DOCUMENTS_ERROR_FETCH', "No se pueden obtener los documentos.");
+define('MOD_Z4M_STORAGE_DOCUMENTS_ERROR_UPLOAD_OTHER', 'La carga de los archivosos ha fallado.');
+define('MOD_Z4M_STORAGE_DOCUMENTS_ERROR_FETCH', "No se pueden obtener los archivos.");
 define('MOD_Z4M_STORAGE_DOCUMENTS_SUCCESS_REMOVE', "'%filename%' eliminado.");
-define('MOD_Z4M_STORAGE_DOCUMENTS_ERROR_REMOVE', "No se pueden eliminar el documento.");
+define('MOD_Z4M_STORAGE_DOCUMENTS_ERROR_REMOVE', "No se pueden eliminar el archivo.");
