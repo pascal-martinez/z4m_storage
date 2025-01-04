@@ -115,7 +115,7 @@ To initialize the `upload_documents.php` view fragment, a [`Z4M_StorageDocumentU
 
 ```php
 <div id="my-upload-container" class="w3-content">
-<?php require 'z4m_storage\mod\view\fragment\upload_documents.php'; ?>
+<?php require 'z4m_storage/mod/view/fragment/upload_documents.php'; ?>
 </div>
 <script type="module">
     import { Z4M_StorageDocumentUpload } from './engine/modules/z4m_storage/public/js/class/z4m_storage_upload-min.js';
@@ -143,7 +143,7 @@ To initialize the `upload_photos.php` view fragment, a [`Z4M_StoragePhotoUpload`
 
 ```php
 <div id="my-upload-container" class="w3-content">
-<?php require 'z4m_storage\mod\view\fragment\upload_photos.php'; ?>
+<?php require 'z4m_storage/mod/view/fragment/upload_photos.php'; ?>
 </div>
 <script type="module">
     import { Z4M_StoragePhotoUpload } from './engine/modules/z4m_storage/public/js/class/z4m_storage_upload-min.js';
