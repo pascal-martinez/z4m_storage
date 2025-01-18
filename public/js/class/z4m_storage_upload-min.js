@@ -9,9 +9,7 @@ class Z4M_StorageUpload{#containerEl
 #storageSubdirectory
 #refreshHandler
 #withPhotoThumbnails
-fileTemplate
-noFileTemplate
-constructor(containerSelector,withPhotoThumbnails){this.#withPhotoThumbnails=withPhotoThumbnails;this.#storageSubdirectory=null;this.#containerEl=$(containerSelector+' .z4m-storage-upload');this.#form=this.#containerEl.find('form');this.#uploadButton=this.#containerEl.find('form button');this.#fileInput=this.#containerEl.find('form input');this.#fileContainer=this.#containerEl.find('.file-container');this.fileTemplate=this.getFileContainer().find('.file').clone();this.fileTemplate.removeClass('w3-hide');this.noFileTemplate=this.getFileContainer().find('.no-file').clone();this.noFileTemplate.removeClass('w3-hide');this.#handleEvents()}
+constructor(containerSelector,withPhotoThumbnails){this.#withPhotoThumbnails=withPhotoThumbnails;this.#storageSubdirectory=null;this.#containerEl=$(containerSelector+' .z4m-storage-upload');this.#form=this.#containerEl.find('form');this.#uploadButton=this.#containerEl.find('form button');this.#fileInput=this.#containerEl.find('form input');this.#fileContainer=this.#containerEl.find('.file-container');this.#handleEvents()}
 #getBusinessId(){return typeof this.#businessIdCallback==='function'?this.#businessIdCallback():null}
 #getRemoveTitle(){return $(this.#form).data('remove-title')}
 #getRemoveQuestion(filename){return $(this.#form).data('remove-question').replace('%filename%',filename)}
@@ -51,11 +49,13 @@ getFileContainer(){return this.#fileContainer}
 refresh(rows){const $this=this;if(rows===undefined){this.#getTableRows(_refresh)}else{_refresh(rows)}
 function _refresh(rowsFound){$this.reset();if(typeof $this.#refreshHandler==='function'){$this.#refreshHandler.call($this,rowsFound)}
 $this.notifyNewDocumentCount(rowsFound.length)}}}
-class Z4M_StorageDocumentUpload extends Z4M_StorageUpload{constructor(containerSelector){super(containerSelector,'no');this.setRefreshHandler(this.#_refresh)}
-#_refresh(files){for(const file of files){let newFile=this.fileTemplate.clone();newFile.attr('data-id',file.id);newFile.find('.datetime').html(file.upload_datetime_locale);newFile.find('.filename').html(file.original_basename);newFile.find('.filesize').html(file.filesize_display);this.getFileContainer().append(newFile)}
-if(files.length===0){this.getFileContainer().append(this.noFileTemplate.clone())}}}
-class Z4M_StoragePhotoUpload extends Z4M_StorageUpload{constructor(containerSelector){super(containerSelector,'yes');this.setRefreshHandler(this.#_refresh)}
-#_refresh(files){for(const file of files){let newFile=this.fileTemplate.clone();newFile.addClass('w3-show-inline-block');newFile.attr('data-id',file.id);newFile.find('.datetime').html(file.upload_datetime_locale);newFile.find('.filename').html(file.original_basename);newFile.find('.filename').attr('title',file.original_basename);newFile.find('.filesize').html(file.filesize_display);if(file.thumbnail!==!1){newFile.find('img').attr('src',file.thumbnail);newFile.find('img').attr('alt',file.original_basename)}else{newFile.find('img').addClass('w3-hide');newFile.find('.no-thumbnail').removeClass('w3-hide')}
+class Z4M_StorageDocumentUpload extends Z4M_StorageUpload{static #documentTemplate=null;static #noDocumentTemplate=null;constructor(containerSelector){super(containerSelector,'no');this.setRefreshHandler(this.#_refresh);if(Z4M_StorageDocumentUpload.#documentTemplate===null){Z4M_StorageDocumentUpload.#documentTemplate=this.getFileContainer().find('.file').clone();Z4M_StorageDocumentUpload.#documentTemplate.removeClass('w3-hide')}
+if(Z4M_StorageDocumentUpload.#noDocumentTemplate===null){Z4M_StorageDocumentUpload.#noDocumentTemplate=this.getFileContainer().find('.no-file').clone();Z4M_StorageDocumentUpload.#noDocumentTemplate.removeClass('w3-hide')}}
+#_refresh(files){for(const file of files){let newFile=Z4M_StorageDocumentUpload.#documentTemplate.clone();newFile.attr('data-id',file.id);newFile.find('.datetime').html(file.upload_datetime_locale);newFile.find('.filename').html(file.original_basename);newFile.find('.filesize').html(file.filesize_display);this.getFileContainer().append(newFile)}
+if(files.length===0){this.getFileContainer().append(Z4M_StorageDocumentUpload.#noDocumentTemplate.clone())}}}
+class Z4M_StoragePhotoUpload extends Z4M_StorageUpload{static #photoTemplate=null;static #noPhotoTemplate=null;constructor(containerSelector){super(containerSelector,'yes');this.setRefreshHandler(this.#_refresh);if(Z4M_StoragePhotoUpload.#photoTemplate===null){Z4M_StoragePhotoUpload.#photoTemplate=this.getFileContainer().find('.file').clone();Z4M_StoragePhotoUpload.#photoTemplate.removeClass('w3-hide')}
+if(Z4M_StoragePhotoUpload.#noPhotoTemplate===null){Z4M_StoragePhotoUpload.#noPhotoTemplate=this.getFileContainer().find('.no-file').clone();Z4M_StoragePhotoUpload.#noPhotoTemplate.removeClass('w3-hide')}}
+#_refresh(files){for(const file of files){let newFile=Z4M_StoragePhotoUpload.#photoTemplate.clone();newFile.addClass('w3-show-inline-block');newFile.attr('data-id',file.id);newFile.find('.datetime').html(file.upload_datetime_locale);newFile.find('.filename').html(file.original_basename);newFile.find('.filename').attr('title',file.original_basename);newFile.find('.filesize').html(file.filesize_display);if(file.thumbnail!==!1){newFile.find('img').attr('src',file.thumbnail);newFile.find('img').attr('alt',file.original_basename)}else{newFile.find('img').addClass('w3-hide');newFile.find('.no-thumbnail').removeClass('w3-hide')}
 this.getFileContainer().append(newFile)}
-if(files.length===0){this.getFileContainer().append(this.noFileTemplate.clone())}}}
+if(files.length===0){this.getFileContainer().append(Z4M_StoragePhotoUpload.#noPhotoTemplate.clone())}}}
 export{Z4M_StorageDocumentUpload,Z4M_StoragePhotoUpload}

@@ -17,8 +17,8 @@
  * --------------------------------------------------------------------
  * ZnetDK 4 Mobile Storage module JS library
  *
- * File version: 1.0
- * Last update: 12/05/2024
+ * File version: 1.1
+ * Last update: 01/13/2025
  */
 
 /* global z4m */
@@ -37,8 +37,6 @@ class Z4M_StorageUpload {
     #storageSubdirectory
     #refreshHandler
     #withPhotoThumbnails
-    fileTemplate
-    noFileTemplate
     /**
      * Instantiates a new file upload object.
      * @param {string} containerSelector Selector of the container that embeds
@@ -54,11 +52,6 @@ class Z4M_StorageUpload {
         this.#uploadButton = this.#containerEl.find('form button');
         this.#fileInput = this.#containerEl.find('form input');
         this.#fileContainer = this.#containerEl.find('.file-container');
-        // Clone file template
-        this.fileTemplate = this.getFileContainer().find('.file').clone();
-        this.fileTemplate.removeClass('w3-hide');
-        this.noFileTemplate = this.getFileContainer().find('.no-file').clone();
-        this.noFileTemplate.removeClass('w3-hide');
         // Handle events
         this.#handleEvents();
     }
@@ -266,7 +259,7 @@ class Z4M_StorageUpload {
     }
     /**
      * Upload the specified files to the web server for storage.
-     * @param {FileList} selected files to upload
+     * @param {FileList} files selected files to upload
      */
     async #upload(files) {
         const filesToUpload = [];
@@ -418,6 +411,9 @@ class Z4M_StorageUpload {
  * Document upload JS API
  */
 class Z4M_StorageDocumentUpload extends Z4M_StorageUpload {
+    static #documentTemplate = null;
+    static #noDocumentTemplate = null;
+    
     /**
      * Instantiates a new document upload object.
      * @param {string} containerSelector the selector of the HTML element 
@@ -427,6 +423,15 @@ class Z4M_StorageDocumentUpload extends Z4M_StorageUpload {
     constructor(containerSelector) {        
         super(containerSelector, 'no');
         this.setRefreshHandler(this.#_refresh);
+        // Clone document template
+        if (Z4M_StorageDocumentUpload.#documentTemplate === null) {
+            Z4M_StorageDocumentUpload.#documentTemplate = this.getFileContainer().find('.file').clone();
+            Z4M_StorageDocumentUpload.#documentTemplate.removeClass('w3-hide');
+        }
+        if (Z4M_StorageDocumentUpload.#noDocumentTemplate === null) {
+            Z4M_StorageDocumentUpload.#noDocumentTemplate = this.getFileContainer().find('.no-file').clone();
+            Z4M_StorageDocumentUpload.#noDocumentTemplate.removeClass('w3-hide');
+        }
     }
     /**
      * Displays the uploaded documents in an HTML table
@@ -434,7 +439,7 @@ class Z4M_StorageDocumentUpload extends Z4M_StorageUpload {
      */
     #_refresh(files) {
         for (const file of files) {
-            let newFile = this.fileTemplate.clone();
+            let newFile = Z4M_StorageDocumentUpload.#documentTemplate.clone();
             newFile.attr('data-id', file.id);
             newFile.find('.datetime').html(file.upload_datetime_locale);
             newFile.find('.filename').html(file.original_basename);
@@ -442,7 +447,7 @@ class Z4M_StorageDocumentUpload extends Z4M_StorageUpload {
             this.getFileContainer().append(newFile);
         }
         if (files.length === 0) {
-            this.getFileContainer().append(this.noFileTemplate.clone());
+            this.getFileContainer().append(Z4M_StorageDocumentUpload.#noDocumentTemplate.clone());
         }
     }
 }
@@ -450,6 +455,9 @@ class Z4M_StorageDocumentUpload extends Z4M_StorageUpload {
  * Photo upload API
  */
 class Z4M_StoragePhotoUpload extends Z4M_StorageUpload {
+    static #photoTemplate = null;
+    static #noPhotoTemplate = null;
+    
     /**
      * Instantiates a new photo upload object.
      * @param {string} containerSelector the selector of the HTML element 
@@ -459,6 +467,15 @@ class Z4M_StoragePhotoUpload extends Z4M_StorageUpload {
     constructor(containerSelector) {
         super(containerSelector, 'yes');
         this.setRefreshHandler(this.#_refresh);
+        // Clone photo template
+        if (Z4M_StoragePhotoUpload.#photoTemplate === null) {
+            Z4M_StoragePhotoUpload.#photoTemplate = this.getFileContainer().find('.file').clone();
+            Z4M_StoragePhotoUpload.#photoTemplate.removeClass('w3-hide');
+        }
+        if (Z4M_StoragePhotoUpload.#noPhotoTemplate === null) {
+            Z4M_StoragePhotoUpload.#noPhotoTemplate = this.getFileContainer().find('.no-file').clone();
+            Z4M_StoragePhotoUpload.#noPhotoTemplate.removeClass('w3-hide');
+        }
     }
     /**
      * Displays the uploaded photos
@@ -466,7 +483,7 @@ class Z4M_StoragePhotoUpload extends Z4M_StorageUpload {
      */
     #_refresh(files) {
         for (const file of files) {
-            let newFile = this.fileTemplate.clone();
+            let newFile = Z4M_StoragePhotoUpload.#photoTemplate.clone();
             newFile.addClass('w3-show-inline-block');
             newFile.attr('data-id', file.id);
             newFile.find('.datetime').html(file.upload_datetime_locale);
@@ -483,7 +500,7 @@ class Z4M_StoragePhotoUpload extends Z4M_StorageUpload {
             this.getFileContainer().append(newFile);
         }
         if (files.length === 0) {
-            this.getFileContainer().append(this.noFileTemplate.clone());
+            this.getFileContainer().append(Z4M_StoragePhotoUpload.#noPhotoTemplate.clone());
         }
     }
 }
