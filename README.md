@@ -14,6 +14,7 @@ The **z4m_storage** module simplifies the loading and storage of documents and p
 
 ![Documents view provided by the ZnetDK 4 Mobile 'z4m_storage' module](https://mobile.znetdk.fr/applications/default/public/images/modules/z4m_storage/screenshot2.png)
 
+- *Download* of the documents and photos as *ZIP archive* according to the specified period, subdirectory, file extension and file size.
 - PHP View templates and JavaScript API to upload documents and photos.
 - Blocking downloading of documents beyond the maximum authorized storage space (see [`MOD_Z4M_STORAGE_MAX_SPACE_IN_BYTES`](#user-content-z4m-max-space)).
 - Values of the php.ini `post_max_size` and `upload_max_filesize` directives taken in account before uploading documents.

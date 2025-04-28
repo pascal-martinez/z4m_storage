@@ -1,5 +1,10 @@
 # CHANGE LOG: Storage (z4m_storage)
 
+## Version 1.3, 2025-04-28
+- CHANGE: new Download... button added to the 'Documents' view to generate and download a ZIP archive of the documents matching the specified filter criteria.
+- BUG FIXING: the SQL table 'z4m_documents' was not automatically created when showing the 'z4m_storage_documents' view for the first time.
+- BUG FIXING: SQL error on file upload "SQLSTATE[22001]: String data, right truncated: 1406 Data too long for column 'stored_basename' at row 1".
+
 ## Version 1.2, 2025-01-13
 - BUG FIXING: the uploaded documents were displayed twice when the Z4M_StorageDocumentUpload class was instantiated multiple times.
 - BUG FIXING: the uploaded photos were displayed twice when the Z4M_Z4M_StoragePhotoUpload class was instantiated multiple times.

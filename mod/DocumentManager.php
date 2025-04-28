@@ -18,8 +18,8 @@
  * --------------------------------------------------------------------
  * ZnetDK 4 Mobile Storage module Document Manager class
  *
- * File version: 1.0
- * Last update: 12/03/2024
+ * File version: 1.1
+ * Last update: 04/25/2025
  */
 namespace z4m_storage\mod;
 
@@ -175,6 +175,7 @@ class DocumentManager {
     static public function getStoredDocumentFileExtensions() {
         $extensions = [];
         $dao = new model\FileExtensionsDAO();
+        Document::createModuleSqlTable($dao);
         while ($row = $dao->getResult()) {
             $extensions[] = $row['original_file_extension'];
         }
@@ -239,5 +240,5 @@ class DocumentManager {
         }
         return intval($size);
     }
-
+    
 }

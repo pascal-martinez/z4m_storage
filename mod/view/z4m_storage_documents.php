@@ -18,8 +18,8 @@
  * --------------------------------------------------------------------
  * ZnetDK 4 Mobile Storage module view
  *
- * File version: 1.0
- * Last update: 12/02/2024
+ * File version: 1.1
+ * Last update: 04/28/2025
  */
 $color = defined('CFG_MOBILE_W3CSS_THEME_COLOR_SCHEME')
         ? CFG_MOBILE_W3CSS_THEME_COLOR_SCHEME
@@ -108,7 +108,15 @@ use \z4m_storage\mod\DocumentManager;
             <div>&nbsp;</div>
             <button class="purge w3-button <?php echo $color['btn_action']; ?>"
                 type="button" data-confirmation="<?php echo MOD_Z4M_STORAGE_PURGE_CONFIRMATION_TEXT; ?>">
-            <i class="fa fa-trash fa-lg"></i> <?php echo MOD_Z4M_STORAGE_PURGE_BUTTON_LABEL; ?>
+                <i class="fa fa-trash fa-lg"></i> <?php echo MOD_Z4M_STORAGE_PURGE_BUTTON_LABEL; ?>
+            </button>
+        </div>
+        <div class="w3-bar-item">
+            <div>&nbsp;</div>
+            <button class="download w3-button <?php echo $color['btn_action']; ?>"
+                    type="button" data-confirmation="<?php echo MOD_Z4M_STORAGE_DOWNLOAD_CONFIRMATION_TEXT; ?>"
+                    data-download-url="<?php echo General::getURIforDownload('Z4MStorageCtrl'); ?>">
+                <i class="fa fa-file-archive-o fa-lg"></i> <?php echo MOD_Z4M_STORAGE_DOWNLOAD_BUTTON_LABEL; ?>
             </button>
         </div>
     </div>
@@ -152,9 +160,10 @@ use \z4m_storage\mod\DocumentManager;
 <?php endif; ?>
     $(function(){
         const filterSelector = '#z4m-storage-documents-list-filter';
+        let lastRowCount = 0;
         var documentList = z4m.list.make('#z4m-storage-documents-list', false, false);
         documentList.beforeSearchRequestCallback = function(requestData) {
-            const JSONFilters = getFilterCriteria();
+            const JSONFilters = getFilterCriteria('JSON');
             if (JSONFilters !== null) {
                 requestData.search_criteria = JSONFilters;
             }
@@ -163,13 +172,16 @@ use \z4m_storage\mod\DocumentManager;
         documentList.loadedCallback = function(rowCount, pageNumber) {
             const purgeBtn = $(filterSelector + ' button.purge');
             purgeBtn.prop('disabled', rowCount === 0 && pageNumber === 1);
+            const downloadBtn = $(filterSelector + ' button.download');
+            downloadBtn.prop('disabled', rowCount === 0 && pageNumber === 1);
+            lastRowCount = rowCount;
         };
         documentList.beforeInsertRowCallback = function(rowData) {
             if (rowData.hasOwnProperty('total_size')) {
                 $(filterSelector + ' input[name=total_size]').val(rowData.total_size);
             }
         }
-        function getFilterCriteria() {
+        function getFilterCriteria(format) {
             const filterForm = z4m.form.make(filterSelector),
                 startDate = filterForm.getInputValue('start_filter'),
                 endDate = filterForm.getInputValue('end_filter'),
@@ -193,7 +205,8 @@ use \z4m_storage\mod\DocumentManager;
                 filters.file_size = fileSize;
             }
             if (Object.keys(filters).length > 0) {
-                return JSON.stringify(filters);
+                return format === 'JSON' ? JSON.stringify(filters) 
+                    : (new URLSearchParams(filters)).toString();
             }
             return null;
         }
@@ -232,11 +245,26 @@ use \z4m_storage\mod\DocumentManager;
                         }
                     }
                 };
-                const JSONFilters = getFilterCriteria();
+                const JSONFilters = getFilterCriteria('JSON');
                 if (JSONFilters !== null) {
                     requestObj.data = {search_criteria: JSONFilters};
                 }
                 z4m.ajax.request(requestObj);
+            });
+        });
+        // Download button click events
+        $(filterSelector + ' button.download').on('click.z4m_storage', function(){            
+            const confirmation = $(this).data('confirmation').replace('%1', lastRowCount);
+            let downloadURL = $(this).data('download-url') + 'zip';
+            z4m.messages.ask($(this).text(), confirmation, null, function(isOK){
+                if(!isOK) {
+                    return;
+                }
+                const URIFilters = getFilterCriteria('URI');
+                if (URIFilters !== null) {
+                    downloadURL += '&' + URIFilters;
+                }
+                z4m.file.display(encodeURI(downloadURL));
             });
         });
     });

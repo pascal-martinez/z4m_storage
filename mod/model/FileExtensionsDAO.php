@@ -18,8 +18,8 @@
  * --------------------------------------------------------------------
  * ZnetDK 4 Mobile Storage module DAO class
  *
- * File version: 1.0
- * Last update: 12/02/2024
+ * File version: 1.1
+ * Last update: 04/26/2025
  */
 namespace z4m_storage\mod\model;
 
@@ -31,7 +31,8 @@ class FileExtensionsDAO extends \DAO {
     /**
      * Initializes the DAO
      */
-    protected function initDaoProperties() {        
+    protected function initDaoProperties() {     
+        $this->table = 'z4m_documents'; // Required when the DAO is passed in parameter of Document::createModuleSqlTable()
         $this->query = "SELECT DISTINCT original_file_extension FROM z4m_documents";
     }
 

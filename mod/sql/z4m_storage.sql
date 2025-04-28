@@ -17,14 +17,14 @@
  * --------------------------------------------------------------------
  * ZnetDK 4 Mobile Storage module SQL script
  *
- * File version: 1.0
- * Last update: 11/27/2024
+ * File version: 1.1
+ * Last update: 04/25/2025
  */
 CREATE TABLE `z4m_documents` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Internal identifier',
   `original_basename` VARCHAR(100) NOT NULL COMMENT 'Original file name with extension',
   `original_file_extension` VARCHAR(20) NOT NULL COMMENT 'Original file extension',
-  `stored_basename` VARCHAR(20) NOT NULL COMMENT 'Stored file name with extension',
+  `stored_basename` VARCHAR(100) NOT NULL COMMENT 'Stored file name with extension',
   `subdirectory` VARCHAR(50) NULL COMMENT 'Subdirectory',
   `filesize` INT NOT NULL COMMENT 'File size',
   `upload_datetime` DATETIME NOT NULL COMMENT 'Upload date and time',
