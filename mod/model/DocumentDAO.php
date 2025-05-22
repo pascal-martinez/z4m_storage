@@ -18,8 +18,8 @@
  * --------------------------------------------------------------------
  * ZnetDK 4 Mobile Storage module DAO class
  *
- * File version: 1.1
- * Last update: 12/22/2024
+ * File version: 1.2
+ * Last update: 05/18/2025
  */
 namespace z4m_storage\mod\model;
 
@@ -79,7 +79,7 @@ class DocumentDAO extends DAO_Class {
                 $this->addFilter('subdirectory = ?', $criteria['subdirectory']);
             }
         }
-        if (key_exists('business_id', $criteria) && !is_null($criteria['business_id'])) {
+        if (key_exists('business_id', $criteria) && !empty($criteria['business_id'])) {
             $this->addFilter('business_id = ?', $criteria['business_id']);
         }
         if (key_exists('start', $criteria) && !is_null($criteria['start'])) {

@@ -1,5 +1,9 @@
 # CHANGE LOG: Storage (z4m_storage)
 
+## Version 1.4, 2025-05-22
+- CHANGE: new monitoring box 'homemenu_storage.php' to display on the home page to get the current disk space consumption percent.
+- BUG FIXING: after deleting a photo without a business ID set, all other photos were incorrectly hidden when refreshing the photo preview.
+
 ## Version 1.3, 2025-04-28
 - CHANGE: new Download... button added to the 'Documents' view to generate and download a ZIP archive of the documents matching the specified filter criteria.
 - BUG FIXING: the SQL table 'z4m_documents' was not automatically created when showing the 'z4m_storage_documents' view for the first time.
