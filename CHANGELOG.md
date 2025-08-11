@@ -1,5 +1,8 @@
 # CHANGE LOG: Storage (z4m_storage)
 
+## Version 1.5, 2025-08-08
+- BUG FIXING: error RSP-002 in errors.log on document download when no criterium was selected.
+
 ## Version 1.4, 2025-05-22
 - CHANGE: new monitoring box 'homemenu_storage.php' to display on the home page to get the current disk space consumption percent.
 - BUG FIXING: after deleting a photo without a business ID set, all other photos were incorrectly hidden when refreshing the photo preview.

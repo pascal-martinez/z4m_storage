@@ -18,8 +18,8 @@
  * --------------------------------------------------------------------
  * ZnetDK 4 Mobile Storage module App Controller
  *
- * File version: 1.1
- * Last update: 04/28/2025
+ * File version: 1.2
+ * Last update: 08/08/2025
  */
 
 namespace z4m_storage\mod\controller;
@@ -216,6 +216,16 @@ class Z4MStorageCtrl extends \AppController {
     static protected function action_downloadzip() {
         $request = new \Request();
         $criteria = $request->getValuesAsMap('start', 'end', 'subdirectory', 'file_extension', 'file_size');
+        $allCriteriaAreNull = TRUE;
+        foreach ($criteria as $value) {
+            if (!is_null($value)) {
+                $allCriteriaAreNull = FALSE;
+                break;
+            }
+        }
+        if ($allCriteriaAreNull) {
+            $criteria = NULL;
+        }
         $archive = new \z4m_storage\mod\DocumentZipArchive();
         $rows = [];
         DocumentManager::getRows(NULL, NULL, $criteria, 'id DESC', false, $rows);
@@ -226,6 +236,10 @@ class Z4MStorageCtrl extends \AppController {
         }
         $archive->close();
         $response = new \Response();
+        if (count($rows) === 0) {
+            $response->doHttpError(404, MOD_Z4M_STORAGE_DOCUMENTS_DOWNLOAD_LINK,
+                    MOD_Z4M_STORAGE_DOCUMENTS_ERROR_DOWNLOAD_NOT_EXISTS);
+        }
         $response->setFileToDownload($archive->getFilePath(), TRUE, MOD_Z4M_STORAGE_DOWNLOAD_ZIP_FILENAME);
         return $response;
     }
