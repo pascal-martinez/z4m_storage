@@ -1,5 +1,8 @@
 # CHANGE LOG: Storage (z4m_storage)
 
+## Version 1.6, 2025-09-04
+- BUG FIXING: the focus outline of the "See all x documents" was not visible.
+
 ## Version 1.5, 2025-08-08
 - BUG FIXING: error RSP-002 in errors.log on document download when no criterium was selected.
 

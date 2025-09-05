@@ -18,8 +18,8 @@
  * --------------------------------------------------------------------
  * ZnetDK 4 Mobile Storage module view
  *
- * File version: 1.0
- * Last update: 11/26/2024
+ * File version: 1.1
+ * Last update: 09/04/2025
  */
 
 $storageStats = \z4m_storage\mod\StorageStats::getAll();
@@ -67,7 +67,9 @@ $storageStats = \z4m_storage\mod\StorageStats::getAll();
         && \controller\Users::hasMenuItem('z4m_storage_documents') 
         && $storageStats['documents']['filecount'] > 0) : ?>
     <div class="w3-section w3-bar">
-        <a href="javascript:void(0)" onclick="znetdkMobile.content.displayView('z4m_storage_documents');" class="w3-right"><?php echo General::getFilledMessage(MOD_Z4M_STORAGE_USED_SEE_DOCUMENTS_LABEL,$storageStats['documents']['filecount']); ?></a>
+        <div class="w3-right w3-padding-small">
+            <a href="javascript:void(0)" onclick="znetdkMobile.content.displayView('z4m_storage_documents');"><?php echo General::getFilledMessage(MOD_Z4M_STORAGE_USED_SEE_DOCUMENTS_LABEL,$storageStats['documents']['filecount']); ?></a>
+        </div>
     </div>
 <?php endif; ?>
 </div>
