@@ -23,6 +23,7 @@ to apply a limit lower than the one set for the `upload_max_filesize` directive.
 - Photos automatically reduced before upload (see [`MOD_Z4M_STORAGE_MAX_PHOTO_WIDTH_IN_PIXELS`](#user-content-z4m-max-photo-width)).
 - Photo thumbnail display for preview (see [`MOD_Z4M_STORAGE_MAX_PHOTO_THUMBNAIL_WIDTH_IN_PIXELS`](#user-content-z4m-max-thumbnail-width)).
 - Upload capability restricted to users having access to the specified views (see [`MOD_Z4M_STORAGE_DOCUMENT_MANAGEMENT_VIEWS_ALLOWED`](#user-content-z4m-views-allowed)).
+- Photos in their original size can be optionally displayed in an internal modal window (see [`MOD_Z4M_STORAGE_SHOW_PHOTO_IN_MODAL`](#user-content-z4m-photos-modal)).
 
 ## CONCEPTS
 ### File storage location in ZnetDK 4 Mobile
@@ -101,6 +102,8 @@ Defines the following PHP constants to the [`config.php`](/../../../znetdk4mobil
    Default value is `160`.
 - <a id="z4m-views-allowed">`MOD_Z4M_STORAGE_DOCUMENT_MANAGEMENT_VIEWS_ALLOWED`</a>: views that the user must have access to in order to download, view and delete files.
    Default value is `NULL` (no restriction).
+- <a id="z4m-photos-modal">`MOD_Z4M_STORAGE_SHOW_PHOTO_IN_MODAL`</a>: when set to `TRUE`, photos are displayed in an embedded modal.
+   Default value is `FALSE` (photo shown in a new web browser tab).
 
 ## ADD FILE UPLOAD TO YOUR APP
 The **z4m_storage** module is shipped with two PHP view fragment `upload_documents.php` and `upload_photos.php`, that can be included in a view or a modal dialog to upload files.
@@ -112,14 +115,14 @@ This PHP code displays:
 
 ![Upload documents view fragment provided by the ZnetDK 4 Mobile 'z4m_storage' module](https://mobile.znetdk.fr/applications/default/public/images/modules/z4m_storage/screenshot4.png)
 
-To initialize the `upload_documents.php` view fragment, a [`Z4M_StorageDocumentUpload`](public/js/class/z4m_storage_upload.js) object is instantiated from the [`z4m_storage_upload-min.js`](public/js/class/z4m_storage_upload-min.js) JS module.
+To initialize the `upload_documents.php` view fragment, a [`Z4M_StorageDocumentUpload`](public/js/dynamic/z4m_storage_upload.js) object is instantiated from the [`z4m_storage_upload.min.js`](public/js/dynamic/z4m_storage_upload.min.js) JS module.
 
 ```php
 <div id="my-upload-container" class="w3-content">
 <?php require 'z4m_storage/mod/view/fragment/upload_documents.php'; ?>
 </div>
 <script type="module">
-    import { Z4M_StorageDocumentUpload } from './engine/modules/z4m_storage/public/js/class/z4m_storage_upload-min.js';
+    import { Z4M_StorageDocumentUpload } from './engine/modules/z4m_storage/public/js/dynamic/z4m_storage_upload.min.js';
     const storageObj = new Z4M_StorageDocumentUpload('#my-upload-container');
     storageObj.setBusinessIdCallback(function(){
         return 72; // Identifier of the Invoice business object
@@ -140,14 +143,14 @@ This PHP code displays:
 
 ![Upload photos view fragment provided by the ZnetDK 4 Mobile 'z4m_storage' module](https://mobile.znetdk.fr/applications/default/public/images/modules/z4m_storage/screenshot3.jpg)
 
-To initialize the `upload_photos.php` view fragment, a [`Z4M_StoragePhotoUpload`](public/js/class/z4m_storage_upload.js) object is instantiated from the [`z4m_storage_upload-min.js`](public/js/class/z4m_storage_upload-min.js) JS module.
+To initialize the `upload_photos.php` view fragment, a [`Z4M_StoragePhotoUpload`](public/js/dynamic/z4m_storage_upload.js) object is instantiated from the [`z4m_storage_upload.min.js`](public/js/class/z4m_storage_upload.min.js) JS module.
 
 ```php
 <div id="my-upload-container" class="w3-content">
 <?php require 'z4m_storage/mod/view/fragment/upload_photos.php'; ?>
 </div>
 <script type="module">
-    import { Z4M_StoragePhotoUpload } from './engine/modules/z4m_storage/public/js/class/z4m_storage_upload-min.js';
+    import { Z4M_StoragePhotoUpload } from './engine/modules/z4m_storage/public/js/dynamic/z4m_storage_upload.min.js';
     const storageObj = new Z4M_StoragePhotoUpload('#my-upload-container');
     storageObj.setBusinessIdCallback(function(){
         return 18; // Identifier of the Customer business object

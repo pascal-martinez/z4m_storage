@@ -18,8 +18,8 @@
  * --------------------------------------------------------------------
  * Parameters of the ZnetDK 4 Mobile Storage module
  *
- * File version: 1.5
- * Last update: 09/04/2025
+ * File version: 1.6
+ * Last update: 01/09/2026
  */
 
 /**
@@ -50,6 +50,13 @@ define('MOD_Z4M_STORAGE_MAX_PHOTO_WIDTH_IN_PIXELS', 800);
 define('MOD_Z4M_STORAGE_MAX_PHOTO_THUMBNAIL_WIDTH_IN_PIXELS', 160);
 
 /**
+ * Is photo shown in a embedded modal?
+ * @return boolean If TRUE, photo is displayed in an embedded modal. Otherwise,
+ * photo is displayed in a new browser tab.
+ */
+define('MOD_Z4M_STORAGE_SHOW_PHOTO_IN_MODAL', FALSE);
+
+/**
  * Views that the user must have access to in order to download, view and delete
  * files.
  * @return array | NULL An array of view names (without .php extension) or NULL
@@ -70,9 +77,9 @@ define('MOD_Z4M_STORAGE_SQL_SCRIPT_PATH', ZNETDK_MOD_ROOT
  * Module version number
  * @return string Version
  */
-define('MOD_Z4M_STORAGE_VERSION_NUMBER','1.6');
+define('MOD_Z4M_STORAGE_VERSION_NUMBER','1.7');
 /**
  * Module version date
  * @return string Date in W3C format
  */
-define('MOD_Z4M_STORAGE_VERSION_DATE','2025-09-04');
+define('MOD_Z4M_STORAGE_VERSION_DATE','2026-01-09');

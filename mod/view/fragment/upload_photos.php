@@ -18,10 +18,13 @@
  * --------------------------------------------------------------------
  * ZnetDK 4 Mobile Storage module view fragment
  *
- * File version: 1.0
- * Last update: 12/03/2024
+ * File version: 1.1
+ * Last update: 01/09/2026
  */
 $thumbnailWidth = MOD_Z4M_STORAGE_MAX_PHOTO_THUMBNAIL_WIDTH_IN_PIXELS;
+$downloadIcon = MOD_Z4M_STORAGE_SHOW_PHOTO_IN_MODAL ? 'fa-eye' : 'fa-download';
+$downloadTitle = MOD_Z4M_STORAGE_SHOW_PHOTO_IN_MODAL ? MOD_Z4M_STORAGE_DOCUMENTS_DISPLAY_LINK : MOD_Z4M_STORAGE_DOCUMENTS_DOWNLOAD_LINK;
+$downloadModalCls = MOD_Z4M_STORAGE_SHOW_PHOTO_IN_MODAL ? ' modal' : '';
 ?>
 <style>
     .z4m-storage-upload.photos .file {
@@ -49,7 +52,7 @@ $thumbnailWidth = MOD_Z4M_STORAGE_MAX_PHOTO_THUMBNAIL_WIDTH_IN_PIXELS;
     <div class="file-container w3-bar w3-section">
         <div class="file w3-margin-right w3-hide" data-id="0">
             <div class="w3-display-container w3-tooltip">
-                <a class="download" href="#" title="<?php echo MOD_Z4M_STORAGE_DOCUMENTS_DOWNLOAD_LINK; ?>">
+                <a class="download<?php echo $downloadModalCls; ?>" href="#" title="<?php echo $downloadTitle; ?>">
                     <div class="no-thumbnail w3-center w3-xxlarge w3-white w3-hide">
                         <span class="fa-stack w3-padding-24">
                             <i class="fa fa-camera fa-stack-1x"></i>
@@ -57,7 +60,7 @@ $thumbnailWidth = MOD_Z4M_STORAGE_MAX_PHOTO_THUMBNAIL_WIDTH_IN_PIXELS;
                         </span>
                     </div>
                     <span class="icon w3-text w3-display-topmiddle w3-badge w3-opacity">
-                        <i class="fa fa-download fa-lg fa-fw w3-text-white"></i>
+                        <i class="fa <?php echo $downloadIcon; ?> fa-lg fa-fw w3-text-white"></i>
                     </span>
                     <img class="w3-image" src="" alt="">
                 </a>

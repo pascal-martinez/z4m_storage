@@ -17,8 +17,8 @@
  * --------------------------------------------------------------------
  * ZnetDK 4 Mobile Storage module JS library
  *
- * File version: 1.1
- * Last update: 01/13/2025
+ * File version: 1.2
+ * Last update: 01/09/2026
  */
 
 /* global z4m */
@@ -166,8 +166,35 @@ class Z4M_StorageUpload {
      */
     #download(clickedAnchor) {
         const documentId = clickedAnchor.closest('.file').data('id');
-        const url = this.#getDownloadUrl();
-        z4m.file.display(url + '&doc_id=' + encodeURIComponent(documentId));
+        const url = this.#getDownloadUrl(),
+            fullUrl = url + '&doc_id=' + encodeURIComponent(documentId);
+        if (clickedAnchor.hasClass('modal')) {
+            const alt = clickedAnchor.find('img').attr('alt');
+            this.showImgInModal(fullUrl, alt);
+        } else {
+            z4m.file.display(fullUrl);
+        }
+    }
+    showImgInModal(src, alt) {
+        z4m.ajax.toggleLoader(true);
+        const modalSel = '#z4m-storage-image-modal';
+        z4m.modal.make(modalSel, 'z4m_storage_image_modal', function(){
+            const modal = this, imgTpl = $(modalSel + ' template.image-tpl'),
+                img = imgTpl.contents().filter('img').clone();
+            img[0].onload = function() {
+                z4m.ajax.toggleLoader(false);
+                modal.open(null, function(){
+                    img.remove();
+                });
+            };
+            img[0].onerror = function() {
+                z4m.ajax.toggleLoader(false);
+                z4m.messages.notify(imgTpl.data('error-title'), imgTpl.data('error-msg'));
+            };
+            $(modalSel + ' a.close').before(img);
+            img.attr('alt', alt);
+            img.attr('src', src);
+        });
     }
     /**
      * Displays the specified error message in the form containing the file

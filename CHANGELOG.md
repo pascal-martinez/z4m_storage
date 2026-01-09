@@ -1,5 +1,10 @@
 # CHANGE LOG: Storage (z4m_storage)
 
+## Version 1.7, 2026-01-09
+- CHANGE: new `MOD_Z4M_STORAGE_SHOW_PHOTO_IN_MODAL` PHP constant to display the photos in an embedded modal when set to TRUE in the `config.php` of the application.
+- CHANGE: the 'z4m_storage/public/js/class' directory is renamed 'z4m_storage/public/js/dynamic'.
+- CHANGE: the 'z4m_storage_upload-min.js' script is renamed 'z4m_storage_upload.min.js'.
+
 ## Version 1.6, 2025-09-04
 - BUG FIXING: the focus outline of the "See all x documents" was not visible.
 

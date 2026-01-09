@@ -18,8 +18,8 @@
  * --------------------------------------------------------------------
  * ZnetDK 4 Mobile Storage Module French translations
  *
- * File version: 1.2
- * Last update: 04/28/2025
+ * File version: 1.3
+ * Last update: 01/09/2026
  */
 define('MOD_Z4M_STORAGE_MENU_LABEL', 'Stockage');
 define('MOD_Z4M_STORAGE_USED_MENU_LABEL', 'Conso. disque');
@@ -35,6 +35,7 @@ define('MOD_Z4M_STORAGE_DOCUMENTS_UPLOAD_BUTTON', 'Ajouter des documents...');
 define('MOD_Z4M_STORAGE_PHOTOS_UPLOAD_BUTTON', 'Ajouter des photos...');
 define('MOD_Z4M_STORAGE_DOCUMENTS_REMOVE_BUTTON', 'Suppression...');
 define('MOD_Z4M_STORAGE_DOCUMENTS_DOWNLOAD_LINK', 'Téléchargement...');
+define('MOD_Z4M_STORAGE_DOCUMENTS_DISPLAY_LINK', 'Afficher...');
 define('MOD_Z4M_STORAGE_DOCUMENTS_REMOVE_QUESTION', 'Supprimer <b>%filename%</b> ?');
 define('MOD_Z4M_STORAGE_DOCUMENTS_FILENAME_LABEL', 'Fichier');
 define('MOD_Z4M_STORAGE_DOCUMENTS_UPLOAD_DATE_LABEL', 'Chargé le');
