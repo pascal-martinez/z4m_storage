@@ -18,8 +18,8 @@
  * --------------------------------------------------------------------
  * Parameters of the ZnetDK 4 Mobile Storage module
  *
- * File version: 1.6
- * Last update: 01/09/2026
+ * File version: 1.7
+ * Last update: 01/23/2026
  */
 
 /**
@@ -77,9 +77,9 @@ define('MOD_Z4M_STORAGE_SQL_SCRIPT_PATH', ZNETDK_MOD_ROOT
  * Module version number
  * @return string Version
  */
-define('MOD_Z4M_STORAGE_VERSION_NUMBER','1.7');
+define('MOD_Z4M_STORAGE_VERSION_NUMBER','1.8');
 /**
  * Module version date
  * @return string Date in W3C format
  */
-define('MOD_Z4M_STORAGE_VERSION_DATE','2026-01-09');
+define('MOD_Z4M_STORAGE_VERSION_DATE','2026-01-23');

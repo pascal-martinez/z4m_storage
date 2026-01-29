@@ -17,8 +17,8 @@
  * --------------------------------------------------------------------
  * ZnetDK 4 Mobile Storage module JS library
  *
- * File version: 1.2
- * Last update: 01/09/2026
+ * File version: 1.3
+ * Last update: 01/24/2026
  */
 
 /* global z4m */
@@ -37,27 +37,50 @@ class Z4M_StorageUpload {
     #storageSubdirectory
     #refreshHandler
     #withPhotoThumbnails
+    #isReadOnly
+    #isMultiDownload
+    #multiDownloadButton
+    #fileTemplate
+    #noFileTemplate
     /**
      * Instantiates a new file upload object.
      * @param {string} containerSelector Selector of the container that embeds
      * the PHP view fragment ('upload_documents.php' or 'upload_photos.php').
      * @param {string} withPhotoThumbnails Value 'yes' or 'no'
+     * @param {boolean} isReadOnly If true (false by default), the upload and
+     * remove buttons are hidden.
+     * @param {boolean} isMultiDownload If true (false by default), photos and
+     * documents can be selected for download as a ZIP archive.
      * @returns {Z4M_StorageUpload} Instantiated object.
      */
-    constructor(containerSelector, withPhotoThumbnails) {
+    constructor(containerSelector, withPhotoThumbnails, isReadOnly, isMultiDownload) {
         this.#withPhotoThumbnails = withPhotoThumbnails;
+        this.#isReadOnly = isReadOnly;
+        this.#isMultiDownload = isMultiDownload;
         this.#storageSubdirectory = null;
         this.#containerEl = $(containerSelector + ' .z4m-storage-upload');
         this.#form = this.#containerEl.find('form');
         this.#uploadButton = this.#containerEl.find('form button');
         this.#fileInput = this.#containerEl.find('form input');
         this.#fileContainer = this.#containerEl.find('.file-container');
+        this.#multiDownloadButton = this.#containerEl.find('.multidownload');
         // Handle events
         this.#handleEvents();
+        // File templates initialized
+        this.#initFileTemplates();
+    }
+    /**
+     * File and no file templates are memorized in the object
+     */
+    #initFileTemplates() {
+        this.#fileTemplate = this.#fileContainer.find('.file').clone();
+        this.#fileTemplate.removeClass('w3-hide');
+        this.#noFileTemplate = this.#fileContainer.find('.no-file').clone();
+        this.#noFileTemplate.removeClass('w3-hide');
     }
     /**
      * The business identifier
-     * @returns {int|null} The businness identifier 
+     * @returns {int|null} The businness identifier
      */
     #getBusinessId() {
         return typeof this.#businessIdCallback === 'function'
@@ -71,7 +94,7 @@ class Z4M_StorageUpload {
         return $(this.#form).data('remove-title');
     }
     /**
-     * The question displayed for file removal 
+     * The question displayed for file removal
      * @param {string} filename The name of the file to remove.
      * @returns {string} The question to display for confirmation
      */
@@ -91,43 +114,64 @@ class Z4M_StorageUpload {
      * - File selection change
      * - Click on the remove button of a file
      * - Click on the file to download it
+     * If is read only, the Upload button is removed
      */
     #handleEvents() {
         const $this = this;
-        // handle upload button click events...
-        this.#uploadButton.on('click.Z4M_StorageUpload', function(){
-            $this.#fileInput.val(''); // Bug fixing, selection reset
-            $this.#hideFormError();
-            $this.#fileInput.trigger('click');
-        });
-        // handle file selection
-        this.#fileInput.on('change.Z4M_StorageUpload', function(){
-            const selectedFiles = this.files;
-            if (selectedFiles.length > 0) {
-                $this.#upload(selectedFiles);
-            }
-        });
-        // Handle click remove document
-        this.#fileContainer.on('click.Z4M_StorageUpload', '.remove', function(){
-            const filename = $(this).closest('.file').find('.filename').text(),
-                documentId = $(this).closest('.file').data('id');
-            z4m.messages.ask($this.#getRemoveTitle(), $this.#getRemoveQuestion(filename), null, function(isYes){
-                if (isYes) {
-                    $this.#remove(documentId);
+        if (this.#isReadOnly) {
+            this.#uploadButton.remove();
+            this.#fileContainer.find('.remove').remove();
+        } else {
+            // handle upload button click events...
+            this.#uploadButton.on('click.Z4M_StorageUpload', function(){
+                $this.#fileInput.val(''); // Bug fixing, selection reset
+                $this.#hideFormError();
+                $this.#fileInput.trigger('click');
+            });
+            // handle file selection
+            this.#fileInput.on('change.Z4M_StorageUpload', function(){
+                const selectedFiles = this.files;
+                if (selectedFiles.length > 0) {
+                    $this.#upload(selectedFiles);
                 }
             });
-        });
+            // Handle click remove document
+            this.#fileContainer.on('click.Z4M_StorageUpload', '.remove', function(){
+                const filename = $(this).closest('.file').find('.filename').text(),
+                    documentId = $(this).closest('.file').data('id');
+                z4m.messages.ask($this.#getRemoveTitle(), $this.#getRemoveQuestion(filename), null, function(isYes){
+                    if (isYes) {
+                        $this.#remove(documentId);
+                    }
+                });
+            });
+        }
         // Handle download document
         this.#fileContainer.on('click.Z4M_StorageUpload', '.download', function(event){
             $this.#download($(this));
             event.preventDefault();
         });
+        // Handle Multi-upload
+        if (this.#isMultiDownload) {
+            // Handle Multi-upload button click events
+            this.#multiDownloadButton.on('click.Z4M_StorageUpload', function(){
+                $this.#multiDownload();
+            });
+            // Handle checkbox checked/unchecked events
+            this.#fileContainer.on('change.Z4M_StorageUpload', 'input[type=checkbox]', function(){
+                const selectedCount = $this.#fileContainer.find('input[type=checkbox]:checked').length;
+                $this.#multiDownloadButton.prop('disabled', selectedCount < 2);
+            });
+        } else {
+            this.#fileContainer.find('input[type=checkbox]').remove();
+            this.#multiDownloadButton.remove();
+        }
     }
     /**
      * Checks both:
      * - if each file size does not exceed the maximum allowed file size (see
      * 'upload_max_filesize' directive in php.ini).
-     * - if the total size of the specified files does not exceed the 
+     * - if the total size of the specified files does not exceed the
      * maximum allowed size (see 'post_max_size' directive in php.ini).
      * @param {FileList} files Selected files
      * @returns {Boolean} Value true if the total file size does not exceed the
@@ -160,7 +204,7 @@ class Z4M_StorageUpload {
         return $(this.#form).data('download-url');
     }
     /**
-     * Download the specified file 
+     * Download the specified file
      * @param {jQuery} clickedAnchor The clicked anchor element corresponding to
      * the file to download
      */
@@ -170,31 +214,39 @@ class Z4M_StorageUpload {
             fullUrl = url + '&doc_id=' + encodeURIComponent(documentId);
         if (clickedAnchor.hasClass('modal')) {
             const alt = clickedAnchor.find('img').attr('alt');
-            this.showImgInModal(fullUrl, alt);
+            this.#showPhotoInModal(fullUrl, alt);
         } else {
             z4m.file.display(fullUrl);
         }
     }
-    showImgInModal(src, alt) {
-        z4m.ajax.toggleLoader(true);
-        const modalSel = '#z4m-storage-image-modal';
-        z4m.modal.make(modalSel, 'z4m_storage_image_modal', function(){
-            const modal = this, imgTpl = $(modalSel + ' template.image-tpl'),
-                img = imgTpl.contents().filter('img').clone();
-            img[0].onload = function() {
-                z4m.ajax.toggleLoader(false);
-                modal.open(null, function(){
-                    img.remove();
-                });
-            };
-            img[0].onerror = function() {
-                z4m.ajax.toggleLoader(false);
-                z4m.messages.notify(imgTpl.data('error-title'), imgTpl.data('error-msg'));
-            };
-            $(modalSel + ' a.close').before(img);
-            img.attr('alt', alt);
-            img.attr('src', src);
+    #showPhotoInModal(src, alt) {
+        const $this = this, ver = this.#form.data('version');
+        import('./z4m_storage_photo_viewer.min.js?v'+ver).then(function(module){
+            const viewer = new module['Z4M_StoragePhotoViewer']($this.#fileContainer,
+                $this.#getDownloadUrl());
+            viewer.show(src, alt);
+        }).catch(function(error) {
+            console.error('Failed to load module Z4M_StoragePhotoViewer.', error);
+            z4m.file.display(src);
         });
+    }
+    /**
+     * Download the selected files
+     */
+    #multiDownload() {
+        const selection = this.#fileContainer.find('input[type=checkbox]:checked'),
+                docIds = [];
+        selection.each(function(){
+            const docId = $(this).closest('.file').data('id');
+            docIds.push(docId);
+        });
+        if (docIds.length === 0) {
+            console.error('No selected file to download.');
+            return;
+        }
+        const url = this.#getDownloadUrl(),
+            fullUrl = url + '&doc_ids=' + encodeURIComponent(docIds.join());
+        z4m.file.display(fullUrl);
     }
     /**
      * Displays the specified error message in the form containing the file
@@ -268,7 +320,7 @@ class Z4M_StorageUpload {
     }
     /**
      * Returns data fot the AJAX request about the files to upload: the business
-     * identifier, the subdirectory where storing the files and if photo 
+     * identifier, the subdirectory where storing the files and if photo
      * thumbnails have to be returned by the web server.
      * @returns {FormData} The data for the AJAX request
      */
@@ -293,7 +345,7 @@ class Z4M_StorageUpload {
         if (typeof z4m.ajax.toggleLoader === 'function') {z4m.ajax.toggleLoader(true);}
         for (const file of files) {
             filesToUpload.push(file.type.startsWith("image/")
-                ? await this.#reducePhotoSize(file) : file);            
+                ? await this.#reducePhotoSize(file) : file);
         }
         if (typeof z4m.ajax.toggleLoader === 'function') {z4m.ajax.toggleLoader(false);}
         if (!this.#checkSizeOfSelectedFiles(filesToUpload)) {
@@ -365,7 +417,7 @@ class Z4M_StorageUpload {
      * @param {function} refreshHandler Function that handles the file list
      * display.
      */
-    setRefreshHandler(refreshHandler) {
+    _setRefreshHandler(refreshHandler) {
         this.#refreshHandler = refreshHandler;
     }
     /**
@@ -378,7 +430,7 @@ class Z4M_StorageUpload {
         }
     }
     /**
-     * Sets the function to call back each time the business identifier is 
+     * Sets the function to call back each time the business identifier is
      * required for storing the uploaded files.
      * @param {function} callback Function called to get the business
      * identifier in return.
@@ -406,12 +458,27 @@ class Z4M_StorageUpload {
      */
     reset() {
         this.#fileContainer.empty();
+        this.#multiDownloadButton.prop('disabled', true);
+    }
+    /**
+     * Returns a new file template.
+     * @returns {jQuery} The jQuery element of the file template.
+     */
+    _getNewFileTemplate() {
+        return this.#fileTemplate.clone();
+    }
+    /**
+     * Returns a new NO file template.
+     * @returns {jQuery} The jQuery element of the NO file template.
+     */
+    _getNewNoFileTemplate() {
+        return this.#noFileTemplate.clone();
     }
     /**
      * Returns the file container.
      * @returns {jQuery} The file container.
      */
-    getFileContainer() {
+    _getFileContainer() {
         return this.#fileContainer;
     }
     /**
@@ -440,25 +507,19 @@ class Z4M_StorageUpload {
 class Z4M_StorageDocumentUpload extends Z4M_StorageUpload {
     static #documentTemplate = null;
     static #noDocumentTemplate = null;
-    
     /**
      * Instantiates a new document upload object.
-     * @param {string} containerSelector the selector of the HTML element 
+     * @param {string} containerSelector the selector of the HTML element
      * containing the 'upload_documents.php' view fragment.
+     * @param {boolean} isReadOnly If true (false by default), the upload and
+     * remove buttons are hidden.
+     * @param {boolean} isMultiDownload If true (false by default), documents can
+     * be selected for download as a ZIP archive.
      * @returns {Z4M_StorageDocumentUpload} The upload object
      */
-    constructor(containerSelector) {        
-        super(containerSelector, 'no');
-        this.setRefreshHandler(this.#_refresh);
-        // Clone document template
-        if (Z4M_StorageDocumentUpload.#documentTemplate === null) {
-            Z4M_StorageDocumentUpload.#documentTemplate = this.getFileContainer().find('.file').clone();
-            Z4M_StorageDocumentUpload.#documentTemplate.removeClass('w3-hide');
-        }
-        if (Z4M_StorageDocumentUpload.#noDocumentTemplate === null) {
-            Z4M_StorageDocumentUpload.#noDocumentTemplate = this.getFileContainer().find('.no-file').clone();
-            Z4M_StorageDocumentUpload.#noDocumentTemplate.removeClass('w3-hide');
-        }
+    constructor(containerSelector, isReadOnly = false, isMultiDownload = false) {
+        super(containerSelector, 'no', isReadOnly, isMultiDownload);
+        this._setRefreshHandler(this.#_refresh);
     }
     /**
      * Displays the uploaded documents in an HTML table
@@ -466,15 +527,15 @@ class Z4M_StorageDocumentUpload extends Z4M_StorageUpload {
      */
     #_refresh(files) {
         for (const file of files) {
-            let newFile = Z4M_StorageDocumentUpload.#documentTemplate.clone();
+            let newFile = this._getNewFileTemplate();
             newFile.attr('data-id', file.id);
             newFile.find('.datetime').html(file.upload_datetime_locale);
             newFile.find('.filename').html(file.original_basename);
             newFile.find('.filesize').html(file.filesize_display);
-            this.getFileContainer().append(newFile);
+            this._getFileContainer().append(newFile);
         }
         if (files.length === 0) {
-            this.getFileContainer().append(Z4M_StorageDocumentUpload.#noDocumentTemplate.clone());
+            this._getFileContainer().append(this._getNewNoFileTemplate());
         }
     }
 }
@@ -484,25 +545,19 @@ class Z4M_StorageDocumentUpload extends Z4M_StorageUpload {
 class Z4M_StoragePhotoUpload extends Z4M_StorageUpload {
     static #photoTemplate = null;
     static #noPhotoTemplate = null;
-    
     /**
      * Instantiates a new photo upload object.
-     * @param {string} containerSelector the selector of the HTML element 
+     * @param {string} containerSelector the selector of the HTML element
      * containing the 'upload_photos.php' view fragment.
+     * @param {boolean} isReadOnly If true (false by default), the upload and
+     * remove buttons are hidden.
+     * @param {boolean} isMultiDownload If true (false by default), photos can be
+     * selected for download as a ZIP archive.
      * @returns {Z4M_StoragePhotoUpload} The upload object
      */
-    constructor(containerSelector) {
-        super(containerSelector, 'yes');
-        this.setRefreshHandler(this.#_refresh);
-        // Clone photo template
-        if (Z4M_StoragePhotoUpload.#photoTemplate === null) {
-            Z4M_StoragePhotoUpload.#photoTemplate = this.getFileContainer().find('.file').clone();
-            Z4M_StoragePhotoUpload.#photoTemplate.removeClass('w3-hide');
-        }
-        if (Z4M_StoragePhotoUpload.#noPhotoTemplate === null) {
-            Z4M_StoragePhotoUpload.#noPhotoTemplate = this.getFileContainer().find('.no-file').clone();
-            Z4M_StoragePhotoUpload.#noPhotoTemplate.removeClass('w3-hide');
-        }
+    constructor(containerSelector, isReadOnly = false, isMultiDownload = false) {
+        super(containerSelector, 'yes', isReadOnly, isMultiDownload);
+        this._setRefreshHandler(this.#_refresh);
     }
     /**
      * Displays the uploaded photos
@@ -510,7 +565,7 @@ class Z4M_StoragePhotoUpload extends Z4M_StorageUpload {
      */
     #_refresh(files) {
         for (const file of files) {
-            let newFile = Z4M_StoragePhotoUpload.#photoTemplate.clone();
+            let newFile = this._getNewFileTemplate();
             newFile.addClass('w3-show-inline-block');
             newFile.attr('data-id', file.id);
             newFile.find('.datetime').html(file.upload_datetime_locale);
@@ -524,10 +579,10 @@ class Z4M_StoragePhotoUpload extends Z4M_StorageUpload {
                 newFile.find('img').addClass('w3-hide');
                 newFile.find('.no-thumbnail').removeClass('w3-hide');
             }
-            this.getFileContainer().append(newFile);
+            this._getFileContainer().append(newFile);
         }
         if (files.length === 0) {
-            this.getFileContainer().append(Z4M_StoragePhotoUpload.#noPhotoTemplate.clone());
+            this._getFileContainer().append(this._getNewNoFileTemplate());
         }
     }
 }

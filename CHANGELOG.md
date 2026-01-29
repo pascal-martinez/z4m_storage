@@ -1,5 +1,10 @@
 # CHANGE LOG: Storage (z4m_storage)
 
+## Version 1.8, 2026-01-23
+- CHANGE: new `isReadOnly` argument added to the constructor of the `Z4M_StorageDocumentUpload` and `Z4M_StoragePhotoUpload` classes. When `isReadOnly` is `true`, the upload and remove buttons are hidden.
+- CHANGE: new `isMultiDownload` argument added to the constructor of the `Z4M_StorageDocumentUpload` and `Z4M_StoragePhotoUpload` classes. When `isMultiDownload` is `true`, files can be selected through checkboxes and downloaded by clicking the new Download button.
+- CHANGE: when photos are displayed in an embedded modal (`MOD_Z4M_STORAGE_SHOW_PHOTO_IN_MODAL` PHP constant is `TRUE`), previous and next photos can be displayed through the left and right arrow buttons.
+
 ## Version 1.7, 2026-01-09
 - CHANGE: new `MOD_Z4M_STORAGE_SHOW_PHOTO_IN_MODAL` PHP constant to display the photos in an embedded modal when set to TRUE in the `config.php` of the application.
 - CHANGE: the 'z4m_storage/public/js/class' directory is renamed 'z4m_storage/public/js/dynamic'.

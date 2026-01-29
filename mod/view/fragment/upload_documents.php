@@ -18,8 +18,8 @@
  * --------------------------------------------------------------------
  * ZnetDK 4 Mobile Storage module view fragment
  *
- * File version: 1.0
- * Last update: 12/04/2024
+ * File version: 1.1
+ * Last update: 01/22/2026
  */
 ?>
 <div class="z4m-storage-upload">
@@ -37,7 +37,10 @@
             <tbody class="file-container">
                 <tr class="file w3-hide" data-id="0">
                     <td class="datetime"></td>
-                    <td><a class="filename download" href="#" title="<?php echo MOD_Z4M_STORAGE_DOCUMENTS_DOWNLOAD_LINK; ?>"></a></td>'
+                    <td>
+                        <input class="w3-check" type="checkbox">
+                        <a class="filename download" href="#" title="<?php echo MOD_Z4M_STORAGE_DOCUMENTS_DOWNLOAD_LINK; ?>"></a>
+                    </td>
                     <td class="filesize"></td>
                     <td>
                         <button class="remove w3-button w3-theme-action" title="<?php echo MOD_Z4M_STORAGE_DOCUMENTS_REMOVE_BUTTON; ?>">
@@ -51,4 +54,8 @@
             </tbody>
         </table>
     </div>
+    <button class="multidownload w3-button w3-theme-action" type="button">
+        <i class="fa fa-file-archive-o fa-lg"></i>
+        <?php echo MOD_Z4M_STORAGE_DOWNLOAD_BUTTON_LABEL; ?>
+    </button>
 </div>

@@ -19,8 +19,8 @@
  * --------------------------------------------------------------------
  * ZnetDK 4 Mobile Storage module view
  * 
- * File version: 1.0
- * Last update: 01/09/2026
+ * File version: 1.1
+ * Last update: 01/24/2026
  */
 ?>
 <div id="z4m-storage-image-modal" class="w3-modal" style="padding-top:0">
@@ -28,8 +28,16 @@
         <template class="image-tpl" data-error-title="<?php echo LC_MSG_CRI_ERR_SUMMARY; ?>" data-error-msg="<?php echo MOD_Z4M_STORAGE_DOCUMENTS_ERROR_DOWNLOAD_NOT_EXISTS; ?>">
             <img class="w3-image w3-display-middle" style="width:100%">
         </template>
-        <a class="close w3-button w3-padding w3-display-topright w3-opacity w3-xlarge w3-grey" href="javascript:void(0)" aria-label="<?php echo LC_BTN_CLOSE; ?>">
-            <i class="fa fa-times-circle fa-lg" aria-hidden="true" title="<?php echo LC_BTN_CLOSE; ?>"></i>
+        <header>
+            <a class="close w3-button w3-padding w3-display-topright w3-opacity w3-xlarge w3-grey" href="javascript:void(0)" aria-label="<?php echo LC_BTN_CLOSE; ?>">
+                <i class="fa fa-times-circle fa-lg" aria-hidden="true" title="<?php echo LC_BTN_CLOSE; ?>"></i>
+            </a>
+        </header>
+        <a class="prev w3-button w3-padding w3-display-left w3-opacity w3-xlarge w3-grey" href="javascript:void(0)" aria-label="<?php echo MOD_Z4M_STORAGE_PHOTOS_PREVIOUS_BUTTON; ?>">
+            <i class="fa fa-arrow-circle-left fa-lg" aria-hidden="true" title="<?php echo MOD_Z4M_STORAGE_PHOTOS_PREVIOUS_BUTTON; ?>"></i>
+        </a>
+        <a class="next w3-button w3-padding w3-display-right w3-opacity w3-xlarge w3-grey" href="javascript:void(0)" aria-label="<?php echo MOD_Z4M_STORAGE_PHOTOS_NEXT_BUTTON; ?>">
+            <i class="fa fa-arrow-circle-right fa-lg" aria-hidden="true" title="<?php echo MOD_Z4M_STORAGE_PHOTOS_NEXT_BUTTON; ?>"></i>
         </a>
     </div>
 </div>

@@ -18,8 +18,8 @@
  * --------------------------------------------------------------------
  * ZnetDK 4 Mobile Storage module view fragment
  *
- * File version: 1.1
- * Last update: 01/09/2026
+ * File version: 1.2
+ * Last update: 01/22/2026
  */
 $thumbnailWidth = MOD_Z4M_STORAGE_MAX_PHOTO_THUMBNAIL_WIDTH_IN_PIXELS;
 $downloadIcon = MOD_Z4M_STORAGE_SHOW_PHOTO_IN_MODAL ? 'fa-eye' : 'fa-download';
@@ -40,11 +40,18 @@ $downloadModalCls = MOD_Z4M_STORAGE_SHOW_PHOTO_IN_MODAL ? ' modal' : '';
     .z4m-storage-upload.photos .remove {
         cursor: pointer;
     }
-    .z4m-storage-upload.photos .filename {
+    .z4m-storage-upload.photos .filename-container {
         width: 100%;
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
+    }
+    .z4m-storage-upload.photos .filename-container [type=checkbox] {
+        top: 5px;
+    }
+    .z4m-storage-upload.photos .filename {
+        position: relative;
+        top: -2px;
     }
 </style>
 <div class="z4m-storage-upload photos">
@@ -72,8 +79,17 @@ $downloadModalCls = MOD_Z4M_STORAGE_SHOW_PHOTO_IN_MODAL ? ' modal' : '';
                     <span class="filesize"></span>
                 </div>
             </div>
-            <div class="filename w3-padding-small w3-white w3-border-top w3-border-theme w3-small" title=""></div>
+            <div class="filename-container w3-white w3-border-top w3-border-theme">
+                <label>
+                    <input class="w3-check" type="checkbox">
+                    <span class="filename w3-small" title=""></span>
+                </label>
+            </div>
         </div>
         <div class="no-file w3-center w3-hide"><i><?php echo MOD_Z4M_STORAGE_PHOTOS_EMPTY; ?></i></div>
     </div>
+    <button class="multidownload w3-button w3-theme-action" type="button">
+        <i class="fa fa-file-archive-o fa-lg"></i>
+        <?php echo MOD_Z4M_STORAGE_DOWNLOAD_BUTTON_LABEL; ?>
+    </button>
 </div>

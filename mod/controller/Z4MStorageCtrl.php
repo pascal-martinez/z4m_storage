@@ -18,8 +18,8 @@
  * --------------------------------------------------------------------
  * ZnetDK 4 Mobile Storage module App Controller
  *
- * File version: 1.2
- * Last update: 08/08/2025
+ * File version: 1.3
+ * Last update: 01/23/2026
  */
 
 namespace z4m_storage\mod\controller;
@@ -184,8 +184,8 @@ class Z4MStorageCtrl extends \AppController {
     }
     
     /**
-     * Downloads the specified document.
-     * POST parameter: doc_id
+     * Downloads the specified document(s).
+     * POST parameter: doc_id or doc_ids
      * This action is called from the 'upload_documents.php' and 'upload_photos'
      * view fragments by the Z4M_StorageUpload JS class.
      * @return \Response The requested file for download.
@@ -195,7 +195,11 @@ class Z4MStorageCtrl extends \AppController {
         // CFG_DISPLAY_ERROR_DETAIL = FALSE.
         $request = new \Request();
         $response = new \Response();
-        try {
+        if ($request->doc_ids !==NULL) {
+            $docIds = explode(',', $request->doc_ids);
+            return self::downloadZipArchive($docIds, TRUE);
+        }
+        try {            
             $document = new \z4m_storage\mod\Document($request->doc_id);
             $filePath = $document->getStoredFilePath(TRUE);
             $originalBasename = $document->original_basename;
@@ -226,17 +230,26 @@ class Z4MStorageCtrl extends \AppController {
         if ($allCriteriaAreNull) {
             $criteria = NULL;
         }
-        $archive = new \z4m_storage\mod\DocumentZipArchive();
         $rows = [];
+        $docIds = [];
         DocumentManager::getRows(NULL, NULL, $criteria, 'id DESC', false, $rows);
         foreach ($rows as $row) {
-            $document = new \z4m_storage\mod\Document($row['id']);
-            $uniqueFileNameInArchive = $row['id'] . '_' . $document->original_basename;
-            $archive->addDocument($document->getStoredFilePath(), $uniqueFileNameInArchive, $document->subdirectory);
+            $docIds[] = $row['id'];
+        }
+        return self::downloadZipArchive($docIds);
+    }
+    
+    static protected function downloadZipArchive($docIds, $noSubdirectoryInArchive = FALSE) {
+        $archive = new \z4m_storage\mod\DocumentZipArchive();
+        foreach ($docIds as $docId) {
+            $document = new \z4m_storage\mod\Document($docId);
+            $uniqueFileNameInArchive = $docId . '_' . $document->original_basename;
+            $subDirInArchive = $noSubdirectoryInArchive ? '' : $document->subdirectory;
+            $archive->addDocument($document->getStoredFilePath(), $uniqueFileNameInArchive, $subDirInArchive);
         }
         $archive->close();
         $response = new \Response();
-        if (count($rows) === 0) {
+        if (count($docIds) === 0) {
             $response->doHttpError(404, MOD_Z4M_STORAGE_DOCUMENTS_DOWNLOAD_LINK,
                     MOD_Z4M_STORAGE_DOCUMENTS_ERROR_DOWNLOAD_NOT_EXISTS);
         }
